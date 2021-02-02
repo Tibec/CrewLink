@@ -1,16 +1,13 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import io, { Socket } from 'socket.io-client';
 import Avatar from './Avatar';
-import {
-	GameStateContext,
-	LobbySettingsContext,
-	SettingsContext,
-} from './contexts';
+import { GameStateContext, LobbySettingsContext, SettingsContext } from './contexts';
 import {
 	AmongUsState,
 	AudioConnected,
 	Client,
 	GameState,
+	MapType,
 	OtherTalking,
 	Player,
 	SocketClientMap,
@@ -20,11 +17,7 @@ import Peer from 'simple-peer';
 import { ipcRenderer } from 'electron';
 import VAD from './vad';
 import { ILobbySettings, ISettings } from '../common/ISettings';
-import {
-	IpcMessages,
-	IpcOverlayMessages,
-	IpcRendererMessages,
-} from '../common/ipc-messages';
+import { IpcMessages, IpcOverlayMessages, IpcRendererMessages } from '../common/ipc-messages';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import makeStyles from '@material-ui/core/styles/makeStyles';
@@ -177,6 +170,12 @@ function calculateVoiceAudio(
 		pan.maxDistance * pan.maxDistance
 	) {
 		gain.gain.value = 0;
+	}
+
+	if(state.map == MapType.POLUS) {
+		if (other.x >= 12.11 && other.x <= 13.05 && other.y <= -15.51 && other.y >= -16.42) {
+			gain.gain.value = 1.5;
+		}
 	}
 
 	// Reset panning position if the setting is disabled
