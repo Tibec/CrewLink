@@ -322,13 +322,14 @@ const Voice: React.FC<VoiceProps> = function ({
 	// Emit lobby settings to connected peers
 	useEffect(() => {
 		if (gameState.isHost !== true) return;
-		Object.values(peerConnections).forEach((peer) => {
 			try {
-				peer.send(JSON.stringify(settings.localLobbySettings));
+				const { socket } = connectionStuff.current;
+				if (!socket) return;
+				socket.emit('setSettings', JSON.stringify(settings.localLobbySettings));
 			} catch (e) {
 				console.warn('failed to update lobby settings: ', e);
 			}
-		});
+		
 	}, [settings.localLobbySettings]);
 
 	useEffect(() => {
@@ -512,7 +513,7 @@ const Voice: React.FC<VoiceProps> = function ({
 					connection.on('connect', () => {
 						if (gameState.isHost) {
 							try {
-								connection.send(JSON.stringify(lobbySettingsRef.current));
+								socket.emit('setSettings',JSON.stringify(lobbySettingsRef.current));
 							} catch (e) {
 								console.warn('failed to update lobby settings: ', e);
 							}
@@ -643,8 +644,20 @@ const Voice: React.FC<VoiceProps> = function ({
 				socket.on('setClient', (socketId: string, client: Client) => {
 					setSocketClients((old) => ({ ...old, [socketId]: client }));
 				});
+				
 				socket.on('setClients', (clients: SocketClientMap) => {
 					setSocketClients(clients);
+				});
+				socket.on('setSettings', (data:string) => {
+					const settings = JSON.parse(data);
+					Object.keys(lobbySettings).forEach((field: string) => {
+						if (field in settings) {
+							setLobbySettings({
+								type: 'setOne',
+								action: [field, settings[field]],
+							});
+						}
+					});
 				});
 			},
 			(error) => {

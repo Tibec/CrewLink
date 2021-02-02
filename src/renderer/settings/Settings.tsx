@@ -219,15 +219,15 @@ const storeConfig: Store.Options<ISettings> = {
 			properties: {
 				maxDistance: {
 					type: 'number',
-					default: 5.32,
+					default: 3.0,
 				},
 				haunting: {
 					type: 'boolean',
-					default: false,
+					default: true,
 				},
 				hearImpostorsInVents: {
 					type: 'boolean',
-					default: false,
+					default: true,
 				},
 				commsSabotage: {
 					type: 'boolean',
@@ -235,9 +235,9 @@ const storeConfig: Store.Options<ISettings> = {
 				},
 			},
 			default: {
-				maxDistance: 5.32,
-				haunting: false,
-				hearImpostorsInVents: false,
+				maxDistance: 3.0,
+				haunting: true,
+				hearImpostorsInVents: true,
 				commsSabotage: true,
 			},
 		},

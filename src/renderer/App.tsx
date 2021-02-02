@@ -199,9 +199,9 @@ const App: React.FC = function () {
 		meetingOverlay: true,
 		overlayPosition: 'right',
 		localLobbySettings: {
-			maxDistance: 5.32,
-			haunting: false,
-			hearImpostorsInVents: false,
+			maxDistance: 3.0,
+			haunting: true,
+			hearImpostorsInVents: true,
 			commsSabotage: true,
 		},
 	});
